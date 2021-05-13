@@ -15,7 +15,7 @@ type repositoryService struct {
 }
 
 func (s *repositoryService) Find(ctx context.Context, repo string) (*scm.Repository, *scm.Response, error) {
-	path := fmt.Sprintf("api/v5/user/repos/%s", repo)
+	path := fmt.Sprintf("/api/v5/repos/%s", repo)
 	out := new(repository)
 	res, err := s.client.do(ctx, "GET", path, nil, out)
 	return convertRepository(out), res, err
@@ -29,7 +29,7 @@ func (s *repositoryService) FindHook(ctx context.Context, repo string, id string
 }
 
 func (s *repositoryService) FindPerms(ctx context.Context, repo string) (*scm.Perm, *scm.Response, error) {
-	path := fmt.Sprintf("api/v5/user/repos/%s", repo)
+	path := fmt.Sprintf("/api/v5/repos/%s", repo)
 	out := new(repository)
 	res, err := s.client.do(ctx, "GET", path, nil, out)
 	return convertRepository(out).Perm, res, err
@@ -106,12 +106,18 @@ type (
 		CreatedAt     time.Time `json:"created_at"`
 		UpdatedAt     time.Time `json:"updated_at"`
 		Permissions   perm      `json:"permissions"`
+		Namespace     namespace `json:"namespace"`
 	}
 
 	perm struct {
 		Admin bool `json:"admin"`
 		Push  bool `json:"push"`
 		Pull  bool `json:"pull"`
+	}
+
+	namespace struct {
+		Path string `json:"path"`
+		Name string `json:"name"`
 	}
 
 	hook struct {
@@ -138,7 +144,7 @@ func convertRepositoryList(src []*repository) []*scm.Repository {
 func convertRepository(src *repository) *scm.Repository {
 	return &scm.Repository{
 		ID:        strconv.Itoa(src.ID),
-		Namespace: src.Owner.Login,
+		Namespace: src.Namespace.Path,
 		Name:      src.Name,
 		Perm:      convertPerm(src.Permissions),
 		Branch:    src.DefaultBranch,
