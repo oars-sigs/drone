@@ -105,7 +105,7 @@ type (
 		DefaultBranch string    `json:"default_branch"`
 		CreatedAt     time.Time `json:"created_at"`
 		UpdatedAt     time.Time `json:"updated_at"`
-		Permissions   perm      `json:"permissions"`
+		Permission    perm      `json:"permission"`
 		Namespace     namespace `json:"namespace"`
 	}
 
@@ -146,7 +146,7 @@ func convertRepository(src *repository) *scm.Repository {
 		ID:        strconv.Itoa(src.ID),
 		Namespace: src.Namespace.Path,
 		Name:      src.Name,
-		Perm:      convertPerm(src.Permissions),
+		Perm:      convertPerm(src.Permission),
 		Branch:    src.DefaultBranch,
 		Private:   src.Private,
 		Clone:     src.HTMLURL,
