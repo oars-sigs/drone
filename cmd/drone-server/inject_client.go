@@ -47,24 +47,24 @@ var clientSet = wire.NewSet(
 // provideBitbucketClient is a Wire provider function that
 // returns a Source Control Management client based on the
 // environment configuration.
-func provideClient(config config.Config) *scm.Client {
-	switch {
-	case config.Bitbucket.ClientID != "":
-		return provideBitbucketClient(config)
-	case config.Github.ClientID != "":
-		return provideGithubClient(config)
-	case config.Gitea.Server != "":
-		return provideGiteaClient(config)
-	case config.GitLab.ClientID != "":
-		return provideGitlabClient(config)
-	case config.Gogs.Server != "":
-		return provideGogsClient(config)
-	case config.Stash.ConsumerKey != "":
-		return provideStashClient(config)
-	}
-	logrus.Fatalln("main: source code management system not configured")
-	return nil
-}
+// func provideClient(config config.Config) *scm.Client {
+// 	switch {
+// 	case config.Bitbucket.ClientID != "":
+// 		return provideBitbucketClient(config)
+// 	case config.Github.ClientID != "":
+// 		return provideGithubClient(config)
+// 	case config.Gitea.Server != "":
+// 		return provideGiteaClient(config)
+// 	case config.GitLab.ClientID != "":
+// 		return provideGitlabClient(config)
+// 	case config.Gogs.Server != "":
+// 		return provideGogsClient(config)
+// 	case config.Stash.ConsumerKey != "":
+// 		return provideStashClient(config)
+// 	}
+// 	logrus.Fatalln("main: source code management system not configured")
+// 	return nil
+// }
 
 // provideBitbucketClient is a Wire provider function that
 // returns a Bitbucket Cloud client based on the environment
