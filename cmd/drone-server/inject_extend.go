@@ -96,7 +96,7 @@ func provideClient(config spec.Config) *scm.Client {
 	case config.Stash.ConsumerKey != "":
 		return provideStashClient(config)
 	//@+++
-	case os.Getenv("DRONE_GITLAB_CLIENT_ID") != "":
+	case os.Getenv("DRONE_GITEE_CLIENT_ID") != "":
 		return provideGiteeClient(config)
 		//@+++
 	}
