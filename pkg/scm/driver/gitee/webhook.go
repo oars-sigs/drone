@@ -25,7 +25,7 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 	}
 	var hook scm.Webhook
 	switch req.Header.Get("X-Gitee-Event") {
-	case "Push Hook":
+	case "Push Hook", "Tag Push Hook":
 		hook, err = s.parsePushHook(data)
 	case "Merge Request Hook":
 		hook, err = s.parsePullRequestHook(data)
