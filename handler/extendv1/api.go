@@ -8,7 +8,6 @@ import (
 	"github.com/oars-sigs/drone/handler/extendv1/repos/ref"
 	"github.com/oars-sigs/drone/handler/extendv1/templates"
 	"github.com/oars-sigs/drone/model"
-	"github.com/oars-sigs/drone/ui/dist"
 
 	"github.com/drone/drone/core"
 	"github.com/drone/drone/handler/api/acl"
@@ -157,15 +156,5 @@ func (s Server) Handler() http.Handler {
 		})
 
 	})
-	return r
-}
-
-func (s Server) Web() http.Handler {
-	r := chi.NewRouter()
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.NoCache)
-	r.Use(logger.Middleware)
-	h := http.FileServer(dist.New())
-	r.Handle("/*filepath", h)
 	return r
 }

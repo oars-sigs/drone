@@ -40,9 +40,6 @@ func provideRouter(api api.Server, apiext extendv1.Server, web web.Server, rpcv1
 	r.Mount("/debug", pprof)
 	//@+++
 	r.Mount("/extend", apiext.Handler())
-	r.Mount("/js", apiext.Web())
-	r.Mount("/css", apiext.Web())
-	r.Get("/", apiext.Web().ServeHTTP)
 	//@+++
 	return r
 }

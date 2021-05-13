@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-go build -o bin/drone-server github.com/oars-sigs/drone/cmd/drone-server 
-docker build -t registry.cn-shenzhen.aliyuncs.com/oars/drone -f Dockerfile .
-docker push registry.cn-shenzhen.aliyuncs.com/oars/drone
+go mod vendor
+cp -f ui/dist/dist_gen.go vendor/github.com/drone/drone-ui/dist/
+go build -ldflags "-extldflags \"-static\"" -mod vendor -o bin/drone-server github.com/oars-sigs/drone/cmd/drone-server
