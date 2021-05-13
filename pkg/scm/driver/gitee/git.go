@@ -28,7 +28,7 @@ func (s *gitService) FindCommit(ctx context.Context, repo, ref string) (*scm.Com
 func (s *gitService) FindTag(ctx context.Context, repo, name string) (*scm.Reference, *scm.Response, error) {
 	path := fmt.Sprintf("api/v5/repos/%s/tags", repo)
 	out := []*tag{}
-	res, err := s.client.do(ctx, "GET", path, nil, out)
+	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	if err != nil {
 		return nil, res, err
 	}
@@ -44,14 +44,14 @@ func (s *gitService) FindTag(ctx context.Context, repo, name string) (*scm.Refer
 func (s *gitService) ListBranches(ctx context.Context, repo string, opts scm.ListOptions) ([]*scm.Reference, *scm.Response, error) {
 	path := fmt.Sprintf("api/v5/repos/%s/branches", repo)
 	out := []*branch{}
-	res, err := s.client.do(ctx, "GET", path, nil, out)
+	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	return convertBranchList(out), res, err
 }
 
 func (s *gitService) ListTags(ctx context.Context, repo string, _ scm.ListOptions) ([]*scm.Reference, *scm.Response, error) {
 	path := fmt.Sprintf("api/v5/repos/%s/tags", repo)
 	out := []*tag{}
-	res, err := s.client.do(ctx, "GET", path, nil, out)
+	res, err := s.client.do(ctx, "GET", path, nil, &out)
 	return convertTagList(out), res, err
 }
 

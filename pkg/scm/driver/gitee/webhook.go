@@ -25,9 +25,9 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 	}
 	var hook scm.Webhook
 	switch req.Header.Get("X-Gitee-Event") {
-	case "push":
+	case "Push Hook":
 		hook, err = s.parsePushHook(data)
-	case "pull_request":
+	case "Merge Request Hook":
 		hook, err = s.parsePullRequestHook(data)
 	default:
 		return nil, scm.ErrUnknownEvent
@@ -103,7 +103,7 @@ func (s *webhookService) parsePullRequestHook(data []byte) (scm.Webhook, error) 
 	dst := new(PullRequestEvent)
 	err := json.Unmarshal(data, dst)
 	return &scm.PullRequestHook{
-		Action: scm.ActionCreate,
+		Action: convertAction(*dst.Action),
 		PullRequest: scm.PullRequest{
 			Number: dst.PullRequest.Number,
 			Title:  dst.PullRequest.Title,
@@ -354,4 +354,31 @@ type PullRequestHook struct {
 	Additions          int            `json:"additions,omitempty"`
 	Deletions          int            `json:"deletions,omitempty"`
 	ChangedFiles       int            `json:"changed_files,omitempty"`
+}
+
+func convertAction(src string) (action scm.Action) {
+	switch src {
+	case "create", "created":
+		return scm.ActionCreate
+	case "delete", "deleted":
+		return scm.ActionDelete
+	case "update", "updated", "edit", "edited":
+		return scm.ActionUpdate
+	case "open", "opened":
+		return scm.ActionOpen
+	case "reopen", "reopened":
+		return scm.ActionReopen
+	case "close", "closed":
+		return scm.ActionClose
+	case "label", "labeled":
+		return scm.ActionLabel
+	case "unlabel", "unlabeled":
+		return scm.ActionUnlabel
+	case "merge", "merged":
+		return scm.ActionMerge
+	case "synchronize", "synchronized":
+		return scm.ActionSync
+	default:
+		return
+	}
 }
