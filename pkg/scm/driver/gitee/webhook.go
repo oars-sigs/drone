@@ -122,7 +122,7 @@ func (s *webhookService) parsePullRequestHook(data []byte) (scm.Webhook, error) 
 			Link:   dst.PullRequest.HtmlUrl,
 			Fork:   dst.PullRequest.Head.Repo.FullName,
 			Ref:    fmt.Sprintf("refs/pull/%d/head", dst.PullRequest.Number),
-			// Sha:    "",
+			Sha:    dst.PullRequest.Head.Sha,
 		},
 		Repo:   *convertHookRepository(dst.Repository),
 		Sender: *convertUser(dst.Sender),
