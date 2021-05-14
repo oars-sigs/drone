@@ -25,8 +25,10 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 	}
 	var hook scm.Webhook
 	switch req.Header.Get("X-Gitee-Event") {
-	case "Push Hook", "Tag Push Hook":
+	case "Push Hook":
 		hook, err = s.parsePushHook(data)
+	case "Tag Push Hook":
+		hook, err = s.parseTagPushHook(data)
 	case "Merge Request Hook":
 		hook, err = s.parsePullRequestHook(data)
 	default:
@@ -96,6 +98,27 @@ func (s *webhookService) parsePushHook(data []byte) (scm.Webhook, error) {
 		Repo:    *convertHookRepository(dst.Repository),
 		Sender:  *convertUser(dst.Sender),
 		Commits: commits,
+	}, err
+}
+
+func (s *webhookService) parseTagPushHook(data []byte) (scm.Webhook, error) {
+	dst := new(PushEvent)
+	err := json.Unmarshal(data, dst)
+	if err != nil {
+		return nil, err
+	}
+	action := scm.ActionCreate
+	if *dst.Deleted {
+		action = scm.ActionDelete
+	}
+	return &scm.TagHook{
+		Action: action,
+		Ref: scm.Reference{
+			Name: scm.TrimRef(*dst.Ref),
+			Sha:  dst.HeadCommit.Id,
+		},
+		Repo:   *convertHookRepository(dst.Repository),
+		Sender: *convertUser(dst.Sender),
 	}, err
 }
 
